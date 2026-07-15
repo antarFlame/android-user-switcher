@@ -5,4 +5,7 @@
     <author email="diogenes@localhost" href="http://localhost.com">Diogenes</author>
     <content src="index.html" />
     <preference name="android-minSdkVersion" value="29" />
+    
+    <!-- КРИТИЧЕСКИ ВАЖНАЯ СТРОКА: подключает плагин в само приложение -->
+    <plugin name="cordova-plugin-launcher" />
 </widget>
