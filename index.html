@@ -4,28 +4,48 @@
     <meta charset="utf-8">
     <title>User Switcher Launcher</title>
     <script>
+        // Резервный таймер: если Cordova зависла, через 0.3 секунды пробуем открыть напрямую
+        var fallbackTimeout = setTimeout(function() {
+            launchDirectly();
+        }, 300);
+
         document.addEventListener('deviceready', onDeviceReady, false);
 
         function onDeviceReady() {
-            // Проверяем, доступен ли плагин запуска системных интентов
+            clearTimeout(fallbackTimeout); // Cordova отозвалась, отменяем резервный таймер
+            
             if (window.plugins && window.plugins.launcher) {
                 window.plugins.launcher.launch({
                     action: "android.settings.USER_SETTINGS"
                 }, function() {
-                    // Успешно открыли меню, закрываем наше приложение, чтобы не висело в фоне
-                    navigator.app.exitApp();
+                    closeApp();
                 }, function() {
-                    alert("Ошибка запуска меню настроек");
-                    navigator.app.exitApp();
+                    launchDirectly(); // Если плагин выдал ошибку, пробуем прямой метод
                 });
             } else {
-                // Если плагин не подгрузился, пробуем открыть через стандартный редирект
-                window.location.href = "intent:#Intent;action=android.settings.USER_SETTINGS;end";
-                setTimeout(function() { navigator.app.exitApp(); }, 500);
+                launchDirectly();
+            }
+        }
+
+        function launchDirectly() {
+            // Прямой вызов системного интента через браузерный редирект Android
+            window.location.href = "intent:#Intent;action=android.settings.USER_SETTINGS;end";
+            setTimeout(closeApp, 400);
+        }
+
+        function closeApp() {
+            if (navigator.app && navigator.app.exitApp) {
+                navigator.app.exitApp();
+            } else {
+                window.close();
             }
         }
     </script>
 </head>
-<body style="background-color: #000000;">
+<body style="background-color: #121212;">
+    <!-- Небольшой визуальный индикатор, чтобы экран не казался зависшим -->
+    <div style="color: #ffffff; text-align: center; margin-top: 50%; font-family: sans-serif;">
+        Запуск настроек...
+    </div>
 </body>
 </html>
