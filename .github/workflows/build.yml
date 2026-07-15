@@ -48,7 +48,7 @@ jobs:
           }
           EOF
 
-          # 4. Создаем Манифест приложения с правильным Интентом
+                    # 4. Создаем Манифест приложения с правильным Интентом (Исправлено)
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://android.com">
               <application android:label="Смена пользователя" android:allowBackup="true" android:supportsRtl="true">
@@ -61,6 +61,7 @@ jobs:
               </application>
           </manifest>
           EOF
+
 
           # 5. Пишем нативный Java-код запуска меню
           cat << 'EOF' > app/src/main/java/com/diogenes/userswitcher/MainActivity.java
