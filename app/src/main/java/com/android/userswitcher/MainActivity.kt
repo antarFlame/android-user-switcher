@@ -1,9 +1,8 @@
 package com.android.userswitcher
 
-import android.content.ActivityNotFoundException
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 
 class MainActivity : ComponentActivity() {
@@ -11,18 +10,29 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
+        val intents = listOf(
+            Intent().setComponent(
+                ComponentName(
+                    "com.android.settings",
+                    "com.android.settings.Settings\$UserSettingsActivity"
+                )
+            ),
+            Intent().setComponent(
+                ComponentName(
+                    "com.android.settings",
+                    "com.android.settings.users.UserSettingsActivity"
+                )
+            ),
+            Intent("android.settings.SETTINGS")
+        )
 
-            startActivity(
-                Intent(Settings.ACTION_USER_SETTINGS)
-            )
-
-        } catch (_: ActivityNotFoundException) {
-
-            startActivity(
-                Intent(Settings.ACTION_SETTINGS)
-            )
-
+        for (intent in intents) {
+            try {
+                startActivity(intent)
+                finish()
+                return
+            } catch (_: Exception) {
+            }
         }
 
         finish()
