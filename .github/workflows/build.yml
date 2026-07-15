@@ -1,0 +1,26 @@
+name: Build Android APK
+on: [push, workflow_dispatch] #
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - run: npm install -g cordova
+      - uses: actions/setup-java@v4
+        with: {distribution: 'temurin', java-version: '17'}
+      - name: Build
+        run: |
+          cordova create tmp com.example.app UserSwitcher
+          cd tmp
+          cp ../index.html www/index.html
+          cp ../config.xml config.xml
+          cordova platform add android
+          cordova plugin add cordova-plugin-launcher
+          cordova build android --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: UserSwitcher-APK
+          path: tmp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
