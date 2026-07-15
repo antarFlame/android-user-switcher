@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>User Switcher Launcher</title>
+    <script>
+        document.addEventListener('deviceready', onDeviceReady, false);
+
+        function onDeviceReady() {
+            // Проверяем, доступен ли плагин запуска системных интентов
+            if (window.plugins && window.plugins.launcher) {
+                window.plugins.launcher.launch({
+                    action: "android.settings.USER_SETTINGS"
+                }, function() {
+                    // Успешно открыли меню, закрываем наше приложение, чтобы не висело в фоне
+                    navigator.app.exitApp();
+                }, function() {
+                    alert("Ошибка запуска меню настроек");
+                    navigator.app.exitApp();
+                });
+            } else {
+                // Если плагин не подгрузился, пробуем открыть через стандартный редирект
+                window.location.href = "intent:#Intent;action=android.settings.USER_SETTINGS;end";
+                setTimeout(function() { navigator.app.exitApp(); }, 500);
+            }
+        }
+    </script>
+</head>
+<body style="background-color: #000000;">
+</body>
+</html>
