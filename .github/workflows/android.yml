@@ -1,0 +1,51 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      GRADLE_VERSION: "8.10.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Download Gradle
+        run: |
+          wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
+          unzip -q gradle-${GRADLE_VERSION}-bin.zip
+          echo "$PWD/gradle-${GRADLE_VERSION}/bin" >> $GITHUB_PATH
+
+      - name: Verify Gradle
+        run: gradle --version
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
+      - name: Make Wrapper Executable
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-user-switcher
+          path: app/build/outputs/apk/release/*.apk
