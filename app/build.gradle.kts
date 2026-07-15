@@ -5,12 +5,12 @@ plugins {
 
 android {
 
-    namespace = "com.android.userswitcher"
+    namespace = "dev.userswitcher"
 
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.android.userswitcher"
+        applicationId = "dev.userswitcher"
 
         minSdk = 26
         targetSdk = 34

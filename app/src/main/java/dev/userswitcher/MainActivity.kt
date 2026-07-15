@@ -1,4 +1,4 @@
-package com.android.userswitcher
+package dev.userswitcher
 
 import android.content.ComponentName
 import android.content.Intent
